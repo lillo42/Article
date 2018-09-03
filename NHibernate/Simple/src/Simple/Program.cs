@@ -22,12 +22,6 @@ namespace Simple
                 .ExposeConfiguration(config => new SchemaUpdate(config).Execute(true, true))
                 .BuildSessionFactory();
 
-            using (ISession session = sessionFactory.OpenSession())
-            {
-                int amountBook = session.Query<Book>().Count();
-                WriteLine($"Amount book:{amountBook}");
-            }
-
             WriteLine("Saving Author and Book");
 
             using (ISession session = sessionFactory.OpenSession())
@@ -97,6 +91,14 @@ namespace Simple
                 session.Flush();
                 WriteLine("Saved on database");
                 WriteLine($"Author: {author} - Book: {book}");
+            }
+
+            using (ISession session = sessionFactory.OpenSession())
+            {
+                foreach (Book book in session.Query<Book>().Where(x => x.Collaborators.Any()))
+                {
+                    WriteLine(book);
+                }
             }
 
             ReadLine();
