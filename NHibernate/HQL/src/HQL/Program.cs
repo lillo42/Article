@@ -4,6 +4,7 @@ using FluentNHibernate.Cfg.Db;
 using NHibernate;
 using NHibernate.Tool.hbm2ddl;
 using HQL.Model;
+using NHibernate.Linq;
 using static System.Console;
 
 namespace HQL
@@ -16,8 +17,8 @@ namespace HQL
 
             ISessionFactory sessionFactory = Fluently
                 .Configure()
-                .Database(MsSqlConfiguration.MsSql2012.ConnectionString(
-                    @"Data Source=localhost;Initial Catalog=NHTest; User Id=sa;Password=Hello@123")
+                .Database(PostgreSQLConfiguration.Standard.ConnectionString(
+                        @"Server=localhost;Database=nhibernate; User Id=postgres;Password=Hello@123")
                     .ShowSql())
                 .Mappings(m => m.FluentMappings.AddFromAssemblyOf<Program>())
                 .ExposeConfiguration(config => new SchemaUpdate(config).Execute(true, true))
@@ -31,6 +32,8 @@ namespace HQL
                 {
                     Name = "Amazing Pixel"
                 };
+
+                session.Save(publisher);
 
                 WriteLine($"Creating Author:{publisher}");
 
@@ -64,6 +67,8 @@ namespace HQL
                 {
                     Name = "Leya"
                 };
+
+                session.Save(publisher);
 
                 var author = new Author
                 {
@@ -110,10 +115,21 @@ namespace HQL
 
             using (ISession session = sessionFactory.OpenSession())
             {
+                WriteLine("List Publisher:");
+
+                foreach (Publisher p in session.Query<Publisher>())
+                {
+                    WriteLine(p);
+                }
+
+                WriteLine("List Book:");
+
                 foreach (Book book in session.Query<Book>())
                 {
                     WriteLine(book);
                 }
+
+                WriteLine("List Publisher:");
 
                 foreach (Publisher p in session.Query<Publisher>())
                 {
@@ -133,15 +149,25 @@ namespace HQL
                 foreach (Book book in session.Query<Book>())
                 {
                     WriteLine(book);
+                    session.Delete(book);
                 }
+
+                session.Flush();
 
                 foreach (Publisher p in session.Query<Publisher>())
                 {
                     WriteLine(p);
                 }
-            }
 
-            ReadLine();
+                session.CreateQuery($"DELETE FROM {nameof(Collaborator)}")
+                    .ExecuteUpdate();
+
+                session.CreateQuery($"DELETE FROM {nameof(Publisher)} P")
+                    .ExecuteUpdate();
+
+                session.CreateQuery($"DELETE FROM {nameof(Author)} P")
+                    .ExecuteUpdate();
+            }
         }
     }
 }
