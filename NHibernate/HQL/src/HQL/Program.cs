@@ -139,11 +139,11 @@ namespace HQL
 
             using (ISession session = sessionFactory.OpenSession())
             {
-                session.CreateQuery($"DELETE FROM {nameof(Book)} B WHERE B.{nameof(Book.Id)} = 10")
+                session.CreateQuery($"DELETE FROM {nameof(Author)} A WHERE A.{nameof(Author.Id)} = 10")
                     .ExecuteUpdate();
 
-                session.CreateQuery($"DELETE FROM {nameof(Book)} B WHERE B.{nameof(Book.Id)} = :id")
-                    .SetParameter("id", 2)
+                session.CreateQuery($"DELETE FROM {nameof(Author)} A WHERE A.{nameof(Author.Id)} = :id")
+                    .SetParameter("id", 10)
                     .ExecuteUpdate();
 
                 foreach (Book book in session.Query<Book>())
@@ -167,6 +167,8 @@ namespace HQL
 
                 session.CreateQuery($"DELETE FROM {nameof(Author)} P")
                     .ExecuteUpdate();
+                
+                session.Flush();
             }
         }
     }

@@ -30,7 +30,7 @@ namespace HQL.Map
                 .Not.Nullable();
 
             HasManyToMany(x => x.Collaborators)
-                .Cascade.None();
+                .Cascade.All();
         }
     }
 }
