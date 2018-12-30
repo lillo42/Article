@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using FluentNHibernate.Mapping;
 using HQL.Model;
 
@@ -6,7 +7,7 @@ namespace HQL.Map
     public class BookMapper : ClassMap<Book>
     {
         public BookMapper()
-        {
+        {   
             Table("TB_BOOKS");
 
             Id(x => x.Id)

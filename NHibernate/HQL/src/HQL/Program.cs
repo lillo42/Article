@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Runtime.Serialization;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using NHibernate;
@@ -117,6 +118,7 @@ namespace HQL
             {
                 WriteLine("List Publisher:");
 
+               
                 foreach (Publisher p in session.Query<Publisher>())
                 {
                     WriteLine(p);
@@ -167,7 +169,7 @@ namespace HQL
 
                 session.CreateQuery($"DELETE FROM {nameof(Author)} P")
                     .ExecuteUpdate();
-                
+
                 session.Flush();
             }
         }
