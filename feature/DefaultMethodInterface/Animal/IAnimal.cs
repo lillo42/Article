@@ -2,14 +2,6 @@ using static System.Console;
 
 namespace Animal 
 {
-    public abstract class BaseAnimal : IAnimal
-    {
-        void IAnimal.Dream()
-        {
-            throw new System.NotImplementedException();
-        }
-    }
-
     public interface IAnimal 
     {
         static int FeedCounter = 0;
@@ -41,9 +33,35 @@ namespace Animal
 
     public interface IPlant : IAnimal
     {
-        override void Feed() 
+        void IAnimal.Feed()
         {
             WriteLine("Taking a sun....");
         }
+
+        void IAnimal.Sleep()
+        {
+            WriteLine("Wee don't sleep....");
+        }
+
+        void IAnimal.Dream() 
+        {
+            WriteLine("Wee don't sleep....");
+        }
+    }
+
+    public interface ICarnivorousPlant : IPlant
+    {
+        const string GROUP = "";
+        void IAnimal.Feed()
+        {
+            WriteLine("Eating....");
+        }
+
+        void IAnimal.Sleep()
+        {
+            base(IAnimal).Sleep();
+        }
+
+        abstract void IAnimal.Dream();
     }
 }
